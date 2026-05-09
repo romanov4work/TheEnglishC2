@@ -272,7 +272,6 @@ const styles = StyleSheet.create({
   contentTop: {
     alignItems: 'flex-start',
     marginTop: -8,
-    marginLeft: -8,
   },
   contentBottom: {
     marginTop: 'auto',
