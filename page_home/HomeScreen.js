@@ -53,19 +53,19 @@ const ModuleTile = ({ module, layout, tilesInRow }) => {
   // Calculate available width for text (tile width minus padding)
   const textWidth = tileSize - (layout.tilePadding * 2);
 
-  // Estimate character width and calculate scale
-  const titleCharWidth = layout.titleSize * 0.6; // Approximate char width
-  const subtitleCharWidth = layout.subtitleSize * 0.55;
+  // Estimate character width and calculate scale (more conservative)
+  const titleCharWidth = layout.titleSize * 0.75; // Increased from 0.6
+  const subtitleCharWidth = layout.subtitleSize * 0.7; // Increased from 0.55
 
   const titleTextWidth = module.title.length * titleCharWidth;
   const subtitleTextWidth = module.subtitle.length * subtitleCharWidth;
 
-  // Calculate scale factors to fit text
-  const titleScale = Math.min(1, textWidth / titleTextWidth);
-  const subtitleScale = Math.min(1, textWidth / subtitleTextWidth);
+  // Calculate scale factors to fit text with extra margin
+  const titleScale = Math.min(1, (textWidth * 0.95) / titleTextWidth); // 95% to add margin
+  const subtitleScale = Math.min(1, (textWidth * 0.95) / subtitleTextWidth);
 
-  const dynamicTitleSize = layout.titleSize * Math.max(titleScale, 0.5);
-  const dynamicSubtitleSize = layout.subtitleSize * Math.max(subtitleScale, 0.6);
+  const dynamicTitleSize = layout.titleSize * Math.max(titleScale, 0.4); // Reduced min from 0.5
+  const dynamicSubtitleSize = layout.subtitleSize * Math.max(subtitleScale, 0.5); // Reduced min from 0.6
 
   return (
     <Pressable
@@ -249,11 +249,13 @@ const styles = StyleSheet.create({
     marginTop: 'auto',
     letterSpacing: 0.5,
     flexShrink: 1,
+    flexWrap: 'nowrap',
   },
   subtitle: {
     color: 'rgba(255, 255, 255, 0.8)',
     fontWeight: '500',
     marginTop: 4,
     flexShrink: 1,
+    flexWrap: 'nowrap',
   },
 });
