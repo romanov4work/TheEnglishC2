@@ -42,30 +42,13 @@ const modules = [
   { id: 7, title: 'SPEAKING', subtitle: 'Говорим', color: '#FCBAD3', icon: '💬' },
 ];
 
-const ModuleTile = ({ module, layout, tilesInRow }) => {
+const ModuleTile = ({ module, layout, tilesInRow, uniformTitleSize, uniformSubtitleSize }) => {
   // Calculate tile size based on number of tiles in row
   const gap = 16;
   const padding = 32;
   const maxRowWidth = 900; // Max width for the row
   const availableWidth = Math.min(layout.screenWidth - padding, maxRowWidth);
   const tileSize = (availableWidth - (tilesInRow - 1) * gap) / tilesInRow;
-
-  // Calculate available width for text (tile width minus padding)
-  const textWidth = tileSize - (layout.tilePadding * 2);
-
-  // Estimate character width and calculate scale (more conservative)
-  const titleCharWidth = layout.titleSize * 0.75; // Increased from 0.6
-  const subtitleCharWidth = layout.subtitleSize * 0.7; // Increased from 0.55
-
-  const titleTextWidth = module.title.length * titleCharWidth;
-  const subtitleTextWidth = module.subtitle.length * subtitleCharWidth;
-
-  // Calculate scale factors to fit text with extra margin
-  const titleScale = Math.min(1, (textWidth * 0.95) / titleTextWidth); // 95% to add margin
-  const subtitleScale = Math.min(1, (textWidth * 0.95) / subtitleTextWidth);
-
-  const dynamicTitleSize = layout.titleSize * Math.max(titleScale, 0.4); // Reduced min from 0.5
-  const dynamicSubtitleSize = layout.subtitleSize * Math.max(subtitleScale, 0.5); // Reduced min from 0.6
 
   return (
     <Pressable
@@ -81,12 +64,12 @@ const ModuleTile = ({ module, layout, tilesInRow }) => {
       }]}>
         <Text style={[styles.icon, { fontSize: layout.iconSize }]}>{module.icon}</Text>
         <Text
-          style={[styles.title, { fontSize: dynamicTitleSize }]}
+          style={[styles.title, { fontSize: uniformTitleSize }]}
         >
           {module.title}
         </Text>
         <Text
-          style={[styles.subtitle, { fontSize: dynamicSubtitleSize }]}
+          style={[styles.subtitle, { fontSize: uniformSubtitleSize }]}
         >
           {module.subtitle}
         </Text>
@@ -108,8 +91,42 @@ export default function HomeScreen() {
 
   const layout = getResponsiveLayout(dimensions.width);
 
+  // Calculate uniform font sizes for all tiles based on longest text
+  const calculateUniformSizes = (tilesInRow) => {
+    const gap = 16;
+    const padding = 32;
+    const maxRowWidth = 900;
+    const availableWidth = Math.min(dimensions.width - padding, maxRowWidth);
+    const tileSize = (availableWidth - (tilesInRow - 1) * gap) / tilesInRow;
+    const textWidth = tileSize - (layout.tilePadding * 2);
+
+    const titleCharWidth = layout.titleSize * 0.75;
+    const subtitleCharWidth = layout.subtitleSize * 0.7;
+
+    // Find minimum scale needed for all modules
+    let minTitleScale = 1;
+    let minSubtitleScale = 1;
+
+    modules.forEach(module => {
+      const titleTextWidth = module.title.length * titleCharWidth;
+      const subtitleTextWidth = module.subtitle.length * subtitleCharWidth;
+
+      const titleScale = Math.min(1, (textWidth * 0.95) / titleTextWidth);
+      const subtitleScale = Math.min(1, (textWidth * 0.95) / subtitleTextWidth);
+
+      minTitleScale = Math.min(minTitleScale, titleScale);
+      minSubtitleScale = Math.min(minSubtitleScale, subtitleScale);
+    });
+
+    return {
+      titleSize: layout.titleSize * Math.max(minTitleScale, 0.4),
+      subtitleSize: layout.subtitleSize * Math.max(minSubtitleScale, 0.5),
+    };
+  };
+
   const renderModules = () => {
     if (layout.layout === 'single') {
+      const uniformSizes = calculateUniformSizes(1);
       // Single column - 7 rows
       return modules.map((module) => (
         <ModuleTile
@@ -117,9 +134,13 @@ export default function HomeScreen() {
           module={module}
           layout={layout}
           tilesInRow={1}
+          uniformTitleSize={uniformSizes.titleSize}
+          uniformSubtitleSize={uniformSizes.subtitleSize}
         />
       ));
     } else {
+      // Calculate for 4 tiles (wider row) to ensure consistency
+      const uniformSizes = calculateUniformSizes(4);
       // Custom layout: 3 tiles top, 4 tiles bottom
       const topRow = modules.slice(0, 3);
       const bottomRow = modules.slice(3, 7);
@@ -133,6 +154,8 @@ export default function HomeScreen() {
                 module={module}
                 layout={layout}
                 tilesInRow={3}
+                uniformTitleSize={uniformSizes.titleSize}
+                uniformSubtitleSize={uniformSizes.subtitleSize}
               />
             ))}
           </View>
@@ -143,6 +166,8 @@ export default function HomeScreen() {
                 module={module}
                 layout={layout}
                 tilesInRow={4}
+                uniformTitleSize={uniformSizes.titleSize}
+                uniformSubtitleSize={uniformSizes.subtitleSize}
               />
             ))}
           </View>
