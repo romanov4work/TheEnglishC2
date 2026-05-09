@@ -5,6 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 const getResponsiveLayout = (screenWidth) => {
   if (screenWidth < 600) {
     // Narrow screens - 1 column (7 rows)
+    const tileSize = Math.min(screenWidth - 32, 350);
     return {
       layout: 'single',
       headerFontSize: 40,
@@ -13,10 +14,16 @@ const getResponsiveLayout = (screenWidth) => {
       iconSize: 40,
       titleSize: 20,
       subtitleSize: 12,
-      tileSize: 280, // Fixed size
+      tileSize: tileSize,
     };
   } else {
     // All other screens - 3 tiles top, 4 tiles bottom
+    // Calculate size based on 4 tiles (wider row) to keep both rows same size
+    const gap = 16;
+    const padding = 32;
+    const maxTileSize = 200;
+    const calculatedSize = Math.min((screenWidth - padding - (3 * gap)) / 4, maxTileSize);
+
     return {
       layout: 'custom',
       headerFontSize: 56,
@@ -25,7 +32,7 @@ const getResponsiveLayout = (screenWidth) => {
       iconSize: 48,
       titleSize: 22,
       subtitleSize: 13,
-      tileSize: 200, // Fixed max size
+      tileSize: calculatedSize,
     };
   }
 };
