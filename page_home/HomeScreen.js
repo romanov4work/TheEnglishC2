@@ -33,13 +33,13 @@ const getResponsiveLayout = (screenWidth) => {
 };
 
 const modules = [
-  { id: 1, title: 'VOCABULARY', subtitle: 'Слова', color: '#FF6B9D' },
-  { id: 2, title: 'GRAMMAR', subtitle: 'Грамматика', color: '#4ECDC4' },
-  { id: 3, title: 'PRONUNCIATION', subtitle: 'Произношение', color: '#FFE66D' },
-  { id: 4, title: 'READING', subtitle: 'Читаем', color: '#95E1D3' },
-  { id: 5, title: 'WRITING', subtitle: 'Пишем', color: '#F38181' },
-  { id: 6, title: 'LISTENING', subtitle: 'Слушаем', color: '#AA96DA' },
-  { id: 7, title: 'SPEAKING', subtitle: 'Говорим', color: '#FCBAD3' },
+  { id: 1, title: 'VOCABULARY', subtitle: 'Слова', color: '#FF6B9D', icon: '📚' },
+  { id: 2, title: 'GRAMMAR', subtitle: 'Грамматика', color: '#4ECDC4', icon: '✍️' },
+  { id: 3, title: 'PRONUNCIATION', subtitle: 'Произношение', color: '#FFE66D', icon: '🗣️' },
+  { id: 4, title: 'READING', subtitle: 'Читаем', color: '#95E1D3', icon: '📖' },
+  { id: 5, title: 'WRITING', subtitle: 'Пишем', color: '#F38181', icon: '✏️' },
+  { id: 6, title: 'LISTENING', subtitle: 'Слушаем', color: '#AA96DA', icon: '🎧' },
+  { id: 7, title: 'SPEAKING', subtitle: 'Говорим', color: '#FCBAD3', icon: '💬' },
 ];
 
 const ModuleTile = ({ module, layout, tilesInRow, uniformTitleSize, uniformSubtitleSize }) => {
@@ -62,6 +62,7 @@ const ModuleTile = ({ module, layout, tilesInRow, uniformTitleSize, uniformSubti
         backgroundColor: module.color,
         padding: layout.tilePadding,
       }]}>
+        <Text style={[styles.icon, { fontSize: layout.iconSize }]}>{module.icon}</Text>
         <Text
           style={[styles.title, { fontSize: uniformTitleSize }]}
         >
@@ -99,8 +100,8 @@ export default function HomeScreen() {
     const tileSize = (availableWidth - (tilesInRow - 1) * gap) / tilesInRow;
     const textWidth = tileSize - (layout.tilePadding * 2);
 
-    const titleCharWidth = layout.titleSize * 0.75;
-    const subtitleCharWidth = layout.subtitleSize * 0.7;
+    const titleCharWidth = layout.titleSize * 0.6; // Reduced from 0.75 for larger text
+    const subtitleCharWidth = layout.subtitleSize * 0.55; // Reduced from 0.7 for larger text
 
     // Find minimum scale needed for all modules
     let minTitleScale = 1;
