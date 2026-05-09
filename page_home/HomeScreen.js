@@ -237,10 +237,12 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     marginTop: 'auto',
     letterSpacing: 0.5,
+    flexShrink: 1,
   },
   subtitle: {
     color: 'rgba(255, 255, 255, 0.8)',
     fontWeight: '500',
     marginTop: 4,
+    flexShrink: 1,
   },
 });
