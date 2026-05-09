@@ -3,49 +3,29 @@ import { View, Text, StyleSheet, Pressable, Dimensions, ScrollView, SafeAreaView
 import { LinearGradient } from 'expo-linear-gradient';
 
 const getResponsiveLayout = (screenWidth) => {
-  if (screenWidth < 375) {
-    // Very small phones
+  if (screenWidth < 600) {
+    // Narrow screens - 1 column (7 rows)
     return {
-      columns: 1,
-      headerFontSize: 32,
-      headerSubtitleSize: 14,
-      tilePadding: 16,
-      iconSize: 32,
-      titleSize: 18,
-      subtitleSize: 11,
-    };
-  } else if (screenWidth < 768) {
-    // Phones
-    return {
-      columns: 2,
-      headerFontSize: 48,
+      layout: 'single',
+      headerFontSize: 40,
       headerSubtitleSize: 16,
       tilePadding: 20,
       iconSize: 40,
       titleSize: 20,
       subtitleSize: 12,
+      tileSize: 280, // Fixed size
     };
-  } else if (screenWidth < 1024) {
-    // Tablets portrait
+  } else {
+    // All other screens - 3 tiles top, 4 tiles bottom
     return {
-      columns: 3,
+      layout: 'custom',
       headerFontSize: 56,
       headerSubtitleSize: 18,
       tilePadding: 24,
       iconSize: 48,
       titleSize: 22,
       subtitleSize: 13,
-    };
-  } else {
-    // Large screens - 3 tiles top row, 4 tiles bottom row
-    return {
-      columns: 'custom', // Special layout
-      headerFontSize: 64,
-      headerSubtitleSize: 20,
-      tilePadding: 28,
-      iconSize: 56,
-      titleSize: 24,
-      subtitleSize: 14,
+      tileSize: 200, // Fixed max size
     };
   }
 };
@@ -60,22 +40,12 @@ const modules = [
   { id: 7, title: 'SPEAKING', subtitle: 'говорим', color: '#FCBAD3', icon: '💬' },
 ];
 
-const ModuleTile = ({ module, index, layout, screenWidth, isCustomLayout, rowIndex }) => {
-  let tileWidth;
-
-  if (isCustomLayout) {
-    // Custom layout for large screens: 3 tiles in first row, 4 in second
-    const tilesInRow = rowIndex === 0 ? 3 : 4;
-    tileWidth = (screenWidth - (tilesInRow + 1) * 16) / tilesInRow;
-  } else {
-    tileWidth = (screenWidth - (layout.columns + 1) * 16) / layout.columns;
-  }
-
+const ModuleTile = ({ module, layout }) => {
   return (
     <Pressable
       style={[styles.tile, {
-        width: tileWidth,
-        aspectRatio: 1,
+        width: layout.tileSize,
+        height: layout.tileSize,
       }]}
       onPress={() => console.log(`Pressed ${module.title}`)}
     >
@@ -103,10 +73,18 @@ export default function HomeScreen() {
   }, []);
 
   const layout = getResponsiveLayout(dimensions.width);
-  const isCustomLayout = layout.columns === 'custom';
 
   const renderModules = () => {
-    if (isCustomLayout) {
+    if (layout.layout === 'single') {
+      // Single column - 7 rows
+      return modules.map((module) => (
+        <ModuleTile
+          key={module.id}
+          module={module}
+          layout={layout}
+        />
+      ));
+    } else {
       // Custom layout: 3 tiles top, 4 tiles bottom
       const topRow = modules.slice(0, 3);
       const bottomRow = modules.slice(3, 7);
@@ -114,45 +92,25 @@ export default function HomeScreen() {
       return (
         <>
           <View style={styles.row}>
-            {topRow.map((module, index) => (
+            {topRow.map((module) => (
               <ModuleTile
                 key={module.id}
                 module={module}
-                index={index}
                 layout={layout}
-                screenWidth={dimensions.width}
-                isCustomLayout={true}
-                rowIndex={0}
               />
             ))}
           </View>
           <View style={styles.row}>
-            {bottomRow.map((module, index) => (
+            {bottomRow.map((module) => (
               <ModuleTile
                 key={module.id}
                 module={module}
-                index={index + 3}
                 layout={layout}
-                screenWidth={dimensions.width}
-                isCustomLayout={true}
-                rowIndex={1}
               />
             ))}
           </View>
         </>
       );
-    } else {
-      // Regular grid layout
-      return modules.map((module, index) => (
-        <ModuleTile
-          key={module.id}
-          module={module}
-          index={index}
-          layout={layout}
-          screenWidth={dimensions.width}
-          isCustomLayout={false}
-        />
-      ));
     }
   };
 
@@ -172,7 +130,7 @@ export default function HomeScreen() {
           </Text>
         </View>
 
-        <View style={isCustomLayout ? styles.customGrid : styles.grid}>
+        <View style={layout.layout === 'single' ? styles.singleGrid : styles.customGrid}>
           {renderModules()}
         </View>
       </ScrollView>
@@ -190,11 +148,13 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingBottom: 40,
+    alignItems: 'center',
   },
   header: {
     paddingHorizontal: 24,
     paddingTop: 20,
     marginBottom: 32,
+    alignSelf: 'stretch',
   },
   headerTitle: {
     fontWeight: '800',
@@ -207,14 +167,12 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     letterSpacing: 0.5,
   },
-  grid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    paddingHorizontal: 16,
+  singleGrid: {
+    alignItems: 'center',
     gap: 16,
   },
   customGrid: {
-    paddingHorizontal: 16,
+    alignItems: 'center',
   },
   row: {
     flexDirection: 'row',
