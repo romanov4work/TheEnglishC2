@@ -50,14 +50,22 @@ const ModuleTile = ({ module, layout, tilesInRow }) => {
   const availableWidth = Math.min(layout.screenWidth - padding, maxRowWidth);
   const tileSize = (availableWidth - (tilesInRow - 1) * gap) / tilesInRow;
 
-  // Calculate dynamic font sizes based on tile size
-  const baseTitleSize = layout.titleSize;
-  const baseSubtitleSize = layout.subtitleSize;
+  // Calculate available width for text (tile width minus padding)
+  const textWidth = tileSize - (layout.tilePadding * 2);
 
-  // Scale down font if tile is small
-  const scaleFactor = Math.min(1, tileSize / 200);
-  const dynamicTitleSize = baseTitleSize * Math.max(scaleFactor, 0.7);
-  const dynamicSubtitleSize = baseSubtitleSize * Math.max(scaleFactor, 0.75);
+  // Estimate character width and calculate scale
+  const titleCharWidth = layout.titleSize * 0.6; // Approximate char width
+  const subtitleCharWidth = layout.subtitleSize * 0.55;
+
+  const titleTextWidth = module.title.length * titleCharWidth;
+  const subtitleTextWidth = module.subtitle.length * subtitleCharWidth;
+
+  // Calculate scale factors to fit text
+  const titleScale = Math.min(1, textWidth / titleTextWidth);
+  const subtitleScale = Math.min(1, textWidth / subtitleTextWidth);
+
+  const dynamicTitleSize = layout.titleSize * Math.max(titleScale, 0.5);
+  const dynamicSubtitleSize = layout.subtitleSize * Math.max(subtitleScale, 0.6);
 
   return (
     <Pressable
@@ -74,15 +82,11 @@ const ModuleTile = ({ module, layout, tilesInRow }) => {
         <Text style={[styles.icon, { fontSize: layout.iconSize }]}>{module.icon}</Text>
         <Text
           style={[styles.title, { fontSize: dynamicTitleSize }]}
-          numberOfLines={1}
-          ellipsizeMode="clip"
         >
           {module.title}
         </Text>
         <Text
           style={[styles.subtitle, { fontSize: dynamicSubtitleSize }]}
-          numberOfLines={1}
-          ellipsizeMode="clip"
         >
           {module.subtitle}
         </Text>
