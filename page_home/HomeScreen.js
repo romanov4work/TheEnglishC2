@@ -133,7 +133,14 @@ export default function HomeScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.header}>
+        <View style={[
+          styles.header,
+          layout.layout === 'custom' && {
+            maxWidth: 900,
+            width: '100%',
+            alignSelf: 'center',
+          }
+        ]}>
           <Text style={[styles.headerTitle, { fontSize: layout.headerFontSize }]}>
             The English C2
           </Text>
