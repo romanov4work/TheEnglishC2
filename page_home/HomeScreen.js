@@ -15,15 +15,10 @@ const getResponsiveLayout = (screenWidth) => {
       titleSize: 20,
       subtitleSize: 12,
       tileSize: tileSize,
+      screenWidth: screenWidth,
     };
   } else {
     // All other screens - 3 tiles top, 4 tiles bottom
-    // Calculate size based on 4 tiles (wider row) to keep both rows same size
-    const gap = 16;
-    const padding = 32;
-    const maxTileSize = 200;
-    const calculatedSize = Math.min((screenWidth - padding - (3 * gap)) / 4, maxTileSize);
-
     return {
       layout: 'custom',
       headerFontSize: 56,
@@ -32,7 +27,7 @@ const getResponsiveLayout = (screenWidth) => {
       iconSize: 48,
       titleSize: 22,
       subtitleSize: 13,
-      tileSize: calculatedSize,
+      screenWidth: screenWidth,
     };
   }
 };
@@ -47,12 +42,19 @@ const modules = [
   { id: 7, title: 'SPEAKING', subtitle: 'говорим', color: '#FCBAD3', icon: '💬' },
 ];
 
-const ModuleTile = ({ module, layout }) => {
+const ModuleTile = ({ module, layout, tilesInRow }) => {
+  // Calculate tile size based on number of tiles in row
+  const gap = 16;
+  const padding = 32;
+  const maxRowWidth = 900; // Max width for the row
+  const availableWidth = Math.min(layout.screenWidth - padding, maxRowWidth);
+  const tileSize = (availableWidth - (tilesInRow - 1) * gap) / tilesInRow;
+
   return (
     <Pressable
       style={[styles.tile, {
-        width: layout.tileSize,
-        height: layout.tileSize,
+        width: tileSize,
+        height: tileSize,
       }]}
       onPress={() => console.log(`Pressed ${module.title}`)}
     >
@@ -89,6 +91,7 @@ export default function HomeScreen() {
           key={module.id}
           module={module}
           layout={layout}
+          tilesInRow={1}
         />
       ));
     } else {
@@ -104,6 +107,7 @@ export default function HomeScreen() {
                 key={module.id}
                 module={module}
                 layout={layout}
+                tilesInRow={3}
               />
             ))}
           </View>
@@ -113,6 +117,7 @@ export default function HomeScreen() {
                 key={module.id}
                 module={module}
                 layout={layout}
+                tilesInRow={4}
               />
             ))}
           </View>
