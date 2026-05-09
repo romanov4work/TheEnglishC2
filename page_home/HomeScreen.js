@@ -24,7 +24,7 @@ const getResponsiveLayout = (screenWidth) => {
       headerFontSize: 56,
       headerSubtitleSize: 18,
       tilePadding: 24,
-      iconSize: 48,
+      iconSize: 36,
       titleSize: 22,
       subtitleSize: 13,
       screenWidth: screenWidth,
@@ -62,17 +62,21 @@ const ModuleTile = ({ module, layout, tilesInRow, uniformTitleSize, uniformSubti
         backgroundColor: module.color,
         padding: layout.tilePadding,
       }]}>
-        <Text style={[styles.icon, { fontSize: layout.iconSize }]}>{module.icon}</Text>
-        <Text
-          style={[styles.title, { fontSize: uniformTitleSize }]}
-        >
-          {module.title}
-        </Text>
-        <Text
-          style={[styles.subtitle, { fontSize: uniformSubtitleSize }]}
-        >
-          {module.subtitle}
-        </Text>
+        <View style={styles.contentTop}>
+          <Text style={[styles.icon, { fontSize: layout.iconSize }]}>{module.icon}</Text>
+        </View>
+        <View style={styles.contentBottom}>
+          <Text
+            style={[styles.title, { fontSize: uniformTitleSize }]}
+          >
+            {module.title}
+          </Text>
+          <Text
+            style={[styles.subtitle, { fontSize: uniformSubtitleSize }]}
+          >
+            {module.subtitle}
+          </Text>
+        </View>
       </View>
     </Pressable>
   );
@@ -265,19 +269,21 @@ const styles = StyleSheet.create({
     shadowRadius: 16,
     elevation: 8,
   },
+  contentTop: {
+    alignItems: 'flex-start',
+  },
+  contentBottom: {
+    marginTop: 'auto',
+  },
   icon: {
     lineHeight: 48,
   },
   title: {
     fontWeight: '700',
     color: '#FFFFFF',
-    marginTop: 'auto',
     letterSpacing: 0.5,
     flexShrink: 1,
     flexWrap: 'nowrap',
-    textShadowColor: '#000',
-    textShadowOffset: { width: -1, height: 1 },
-    textShadowRadius: 1,
   },
   subtitle: {
     color: 'rgba(255, 255, 255, 0.8)',
@@ -285,8 +291,5 @@ const styles = StyleSheet.create({
     marginTop: 4,
     flexShrink: 1,
     flexWrap: 'nowrap',
-    textShadowColor: '#000',
-    textShadowOffset: { width: -1, height: 1 },
-    textShadowRadius: 1,
   },
 });
