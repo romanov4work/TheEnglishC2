@@ -135,6 +135,9 @@ export default function HomeScreen() {
       >
         <View style={[
           styles.header,
+          layout.layout === 'single' && {
+            paddingHorizontal: 24,
+          },
           layout.layout === 'custom' && {
             maxWidth: 900,
             width: '100%',
