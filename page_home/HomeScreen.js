@@ -33,13 +33,13 @@ const getResponsiveLayout = (screenWidth) => {
 };
 
 const modules = [
-  { id: 1, title: 'VOCABULARY', subtitle: 'слова', color: '#FF6B9D', icon: '📚' },
-  { id: 2, title: 'GRAMMAR', subtitle: 'грамматика', color: '#4ECDC4', icon: '✍️' },
-  { id: 3, title: 'PRONUNCIATION', subtitle: 'произношение', color: '#FFE66D', icon: '🗣️' },
-  { id: 4, title: 'READING', subtitle: 'читаем', color: '#95E1D3', icon: '📖' },
-  { id: 5, title: 'WRITING', subtitle: 'пишем', color: '#F38181', icon: '✏️' },
-  { id: 6, title: 'LISTENING', subtitle: 'слушаем', color: '#AA96DA', icon: '🎧' },
-  { id: 7, title: 'SPEAKING', subtitle: 'говорим', color: '#FCBAD3', icon: '💬' },
+  { id: 1, title: 'VOCABULARY', subtitle: 'Слова', color: '#FF6B9D', icon: '📚' },
+  { id: 2, title: 'GRAMMAR', subtitle: 'Грамматика', color: '#4ECDC4', icon: '✍️' },
+  { id: 3, title: 'PRONUNCIATION', subtitle: 'Произношение', color: '#FFE66D', icon: '🗣️' },
+  { id: 4, title: 'READING', subtitle: 'Читаем', color: '#95E1D3', icon: '📖' },
+  { id: 5, title: 'WRITING', subtitle: 'Пишем', color: '#F38181', icon: '✏️' },
+  { id: 6, title: 'LISTENING', subtitle: 'Слушаем', color: '#AA96DA', icon: '🎧' },
+  { id: 7, title: 'SPEAKING', subtitle: 'Говорим', color: '#FCBAD3', icon: '💬' },
 ];
 
 const ModuleTile = ({ module, layout, tilesInRow }) => {
@@ -63,8 +63,22 @@ const ModuleTile = ({ module, layout, tilesInRow }) => {
         padding: layout.tilePadding,
       }]}>
         <Text style={[styles.icon, { fontSize: layout.iconSize }]}>{module.icon}</Text>
-        <Text style={[styles.title, { fontSize: layout.titleSize }]}>{module.title}</Text>
-        <Text style={[styles.subtitle, { fontSize: layout.subtitleSize }]}>{module.subtitle}</Text>
+        <Text
+          style={[styles.title, { fontSize: layout.titleSize }]}
+          numberOfLines={1}
+          adjustsFontSizeToFit
+          minimumFontScale={0.6}
+        >
+          {module.title}
+        </Text>
+        <Text
+          style={[styles.subtitle, { fontSize: layout.subtitleSize }]}
+          numberOfLines={1}
+          adjustsFontSizeToFit
+          minimumFontScale={0.7}
+        >
+          {module.subtitle}
+        </Text>
       </View>
     </Pressable>
   );
