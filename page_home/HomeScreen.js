@@ -119,8 +119,8 @@ export default function HomeScreen() {
     });
 
     return {
-      titleSize: layout.titleSize * Math.max(minTitleScale, 0.4),
-      subtitleSize: layout.subtitleSize * Math.max(minSubtitleScale, 0.5),
+      titleSize: layout.titleSize * Math.max(minTitleScale, 0.4) * 1.3,
+      subtitleSize: layout.subtitleSize * Math.max(minSubtitleScale, 0.5) * 1.3,
     };
   };
 
@@ -275,6 +275,9 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
     flexShrink: 1,
     flexWrap: 'nowrap',
+    textShadowColor: '#000',
+    textShadowOffset: { width: -1, height: 1 },
+    textShadowRadius: 1,
   },
   subtitle: {
     color: 'rgba(255, 255, 255, 0.8)',
@@ -282,5 +285,8 @@ const styles = StyleSheet.create({
     marginTop: 4,
     flexShrink: 1,
     flexWrap: 'nowrap',
+    textShadowColor: '#000',
+    textShadowOffset: { width: -1, height: 1 },
+    textShadowRadius: 1,
   },
 });
