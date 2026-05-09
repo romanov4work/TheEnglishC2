@@ -1,84 +1,83 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Pressable, Dimensions, ScrollView, SafeAreaView } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, Pressable, Dimensions, ScrollView, SafeAreaView, Animated } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const getResponsiveLayout = (screenWidth) => {
-  if (screenWidth < 600) {
-    // Narrow screens - 1 column (7 rows)
-    const tileSize = Math.min(screenWidth - 32, 350);
-    return {
-      layout: 'single',
-      headerFontSize: 40,
-      headerSubtitleSize: 16,
-      tilePadding: 20,
-      iconSize: 40,
-      titleSize: 20,
-      subtitleSize: 12,
-      tileSize: tileSize,
-      screenWidth: screenWidth,
-    };
-  } else {
-    // All other screens - 3 tiles top, 4 tiles bottom
-    return {
-      layout: 'custom',
-      headerFontSize: 56,
-      headerSubtitleSize: 18,
-      tilePadding: 24,
-      iconSize: 28,
-      titleSize: 22,
-      subtitleSize: 13,
-      screenWidth: screenWidth,
-    };
-  }
+  // All screens - 3 tiles top, 4 tiles bottom
+  return {
+    layout: 'custom',
+    headerFontSize: screenWidth < 600 ? 32 : 56,
+    headerSubtitleSize: screenWidth < 600 ? 14 : 18,
+    tilePadding: screenWidth < 600 ? 16 : 24,
+    iconSize: screenWidth < 600 ? 24 : 28,
+    titleSize: screenWidth < 600 ? 16 : 22,
+    subtitleSize: screenWidth < 600 ? 10 : 13,
+    screenWidth: screenWidth,
+  };
 };
 
 const modules = [
-  { id: 1, title: 'VOCABULARY', subtitle: 'Слова', color: '#FF6B9D', icon: '📚' },
-  { id: 2, title: 'GRAMMAR', subtitle: 'Грамматика', color: '#4ECDC4', icon: '✍️' },
-  { id: 3, title: 'PRONUNCIATION', subtitle: 'Произношение', color: '#FFE66D', icon: '🗣️' },
-  { id: 4, title: 'READING', subtitle: 'Читаем', color: '#95E1D3', icon: '📖' },
-  { id: 5, title: 'WRITING', subtitle: 'Пишем', color: '#F38181', icon: '✏️' },
-  { id: 6, title: 'LISTENING', subtitle: 'Слушаем', color: '#AA96DA', icon: '🎧' },
-  { id: 7, title: 'SPEAKING', subtitle: 'Говорим', color: '#FCBAD3', icon: '💬' },
+  { id: 1, title: 'VOCABULARY', subtitle: 'Слова', color: '#ffffff', icon: '📚' },
+  { id: 2, title: 'GRAMMAR', subtitle: 'Грамматика', color: '#ffffff', icon: '✍️' },
+  { id: 3, title: 'PRONUNCIATION', subtitle: 'Произношение', color: '#ffffff', icon: '🗣️' },
+  { id: 4, title: 'READING', subtitle: 'Читаем', color: '#ffffff', icon: '📖' },
+  { id: 5, title: 'WRITING', subtitle: 'Пишем', color: '#ffffff', icon: '✏️' },
+  { id: 6, title: 'LISTENING', subtitle: 'Слушаем', color: '#ffffff', icon: '🎧' },
+  { id: 7, title: 'SPEAKING', subtitle: 'Говорим', color: '#ffffff', icon: '💬' },
 ];
 
-const ModuleTile = ({ module, layout, tilesInRow, uniformTitleSize, uniformSubtitleSize }) => {
-  // Calculate tile size based on number of tiles in row
+const ModuleTile = ({ module, layout, tilesInRow, uniformTitleSize, uniformSubtitleSize, index }) => {
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const [isPressed, setIsPressed] = useState(false);
+
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 400,
+      delay: index * 50,
+      useNativeDriver: true,
+    }).start();
+  }, []);
+
   const gap = 16;
   const padding = 32;
-  const maxRowWidth = 900; // Max width for the row
+  const maxRowWidth = 900;
   const availableWidth = Math.min(layout.screenWidth - padding, maxRowWidth);
   const tileSize = (availableWidth - (tilesInRow - 1) * gap) / tilesInRow;
 
   return (
-    <Pressable
-      style={[styles.tile, {
-        width: tileSize,
-        height: tileSize,
-      }]}
-      onPress={() => console.log(`Pressed ${module.title}`)}
-    >
-      <View style={[styles.tileContent, {
-        backgroundColor: module.color,
-        padding: layout.tilePadding,
-      }]}>
-        <View style={styles.contentTop}>
-          <Text style={[styles.icon, { fontSize: layout.iconSize }]}>{module.icon}</Text>
+    <Animated.View style={{ opacity: fadeAnim }}>
+      <Pressable
+        style={[styles.tile, {
+          width: tileSize,
+          height: tileSize,
+        }]}
+        onPress={() => console.log(`Pressed ${module.title}`)}
+        onPressIn={() => setIsPressed(true)}
+        onPressOut={() => setIsPressed(false)}
+      >
+        <View style={[
+          styles.tileContent,
+          {
+            padding: layout.tilePadding,
+            paddingLeft: 7,
+            backgroundColor: isPressed ? '#f5f5f5' : '#ffffff',
+          }
+        ]}>
+          <View style={styles.iconContainer}>
+            <Text style={[styles.icon, { fontSize: layout.iconSize }]}>{module.icon}</Text>
+          </View>
+          <View style={styles.textContainer}>
+            <Text style={[styles.title, { fontSize: uniformTitleSize }]}>
+              {module.title}
+            </Text>
+            <Text style={[styles.subtitle, { fontSize: uniformSubtitleSize }]}>
+              {module.subtitle}
+            </Text>
+          </View>
         </View>
-        <View style={styles.contentBottom}>
-          <Text
-            style={[styles.title, { fontSize: uniformTitleSize }]}
-          >
-            {module.title}
-          </Text>
-          <Text
-            style={[styles.subtitle, { fontSize: uniformSubtitleSize }]}
-          >
-            {module.subtitle}
-          </Text>
-        </View>
-      </View>
-    </Pressable>
+      </Pressable>
+    </Animated.View>
   );
 };
 
@@ -129,88 +128,74 @@ export default function HomeScreen() {
   };
 
   const renderModules = () => {
-    if (layout.layout === 'single') {
-      const uniformSizes = calculateUniformSizes(1);
-      // Single column - 7 rows
-      return modules.map((module) => (
-        <ModuleTile
-          key={module.id}
-          module={module}
-          layout={layout}
-          tilesInRow={1}
-          uniformTitleSize={uniformSizes.titleSize}
-          uniformSubtitleSize={uniformSizes.subtitleSize}
-        />
-      ));
-    } else {
-      // Calculate for 4 tiles (wider row) to ensure consistency
-      const uniformSizes = calculateUniformSizes(4);
-      // Custom layout: 3 tiles top, 4 tiles bottom
-      const topRow = modules.slice(0, 3);
-      const bottomRow = modules.slice(3, 7);
+    // Calculate for 4 tiles (wider row) to ensure consistency
+    const uniformSizes = calculateUniformSizes(4);
+    // Custom layout: 3 tiles top, 4 tiles bottom
+    const topRow = modules.slice(0, 3);
+    const bottomRow = modules.slice(3, 7);
 
-      return (
-        <>
-          <View style={styles.row}>
-            {topRow.map((module) => (
-              <ModuleTile
-                key={module.id}
-                module={module}
-                layout={layout}
-                tilesInRow={3}
-                uniformTitleSize={uniformSizes.titleSize}
-                uniformSubtitleSize={uniformSizes.subtitleSize}
-              />
-            ))}
-          </View>
-          <View style={styles.row}>
-            {bottomRow.map((module) => (
-              <ModuleTile
-                key={module.id}
-                module={module}
-                layout={layout}
-                tilesInRow={4}
-                uniformTitleSize={uniformSizes.titleSize}
-                uniformSubtitleSize={uniformSizes.subtitleSize}
-              />
-            ))}
-          </View>
-        </>
-      );
-    }
+    return (
+      <>
+        <View style={styles.row}>
+          {topRow.map((module, index) => (
+            <ModuleTile
+              key={module.id}
+              module={module}
+              layout={layout}
+              tilesInRow={3}
+              uniformTitleSize={uniformSizes.titleSize}
+              uniformSubtitleSize={uniformSizes.subtitleSize}
+              index={index}
+            />
+          ))}
+        </View>
+        <View style={styles.row}>
+          {bottomRow.map((module, index) => (
+            <ModuleTile
+              key={module.id}
+              module={module}
+              layout={layout}
+              tilesInRow={4}
+              uniformTitleSize={uniformSizes.titleSize}
+              uniformSubtitleSize={uniformSizes.subtitleSize}
+              index={index + 3}
+            />
+          ))}
+        </View>
+      </>
+    );
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        <View style={[
-          styles.header,
-          layout.layout === 'single' && {
-            paddingHorizontal: 24,
-          },
-          layout.layout === 'custom' && {
-            maxWidth: 900,
-            width: '100%',
-            alignSelf: 'center',
-            paddingHorizontal: dimensions.width <= 932 ? 16 : 0, // 900 + 32 padding
-          }
-        ]}>
-          <Text style={[styles.headerTitle, { fontSize: layout.headerFontSize }]}>
-            The English C2
-          </Text>
-          <Text style={[styles.headerSubtitle, { fontSize: layout.headerSubtitleSize }]}>
-            Путь к совершенству
-          </Text>
-        </View>
+      <View style={styles.background}>
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={[
+            styles.header,
+            {
+              maxWidth: 900,
+              width: '100%',
+              alignSelf: 'center',
+              paddingHorizontal: dimensions.width <= 932 ? 16 : 0,
+            }
+          ]}>
+            <Text style={[styles.headerTitle, { fontSize: layout.headerFontSize }]}>
+              The English C2
+            </Text>
+            <Text style={[styles.headerSubtitle, { fontSize: layout.headerSubtitleSize }]}>
+              Путь к совершенству
+            </Text>
+          </View>
 
-        <View style={layout.layout === 'single' ? styles.singleGrid : styles.customGrid}>
-          {renderModules()}
-        </View>
-      </ScrollView>
+          <View style={styles.customGrid}>
+            {renderModules()}
+          </View>
+        </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
@@ -218,7 +203,11 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0A0E27',
+    backgroundColor: '#fafafa',
+  },
+  background: {
+    flex: 1,
+    backgroundColor: '#fafafa',
   },
   scrollView: {
     flex: 1,
@@ -228,32 +217,29 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   header: {
-    paddingTop: 20,
-    marginBottom: 32,
+    paddingTop: 40,
+    marginBottom: 40,
     alignSelf: 'stretch',
+    paddingLeft: 8,
   },
   headerTitle: {
-    fontWeight: '800',
-    color: '#FFFFFF',
-    letterSpacing: -2,
+    fontWeight: '600',
+    color: '#000000',
+    letterSpacing: -1,
     marginBottom: 8,
   },
   headerSubtitle: {
-    color: '#8B92B0',
-    fontWeight: '500',
+    color: '#666666',
+    fontWeight: '400',
     letterSpacing: 0.5,
-  },
-  singleGrid: {
-    alignItems: 'center',
-    gap: 16,
   },
   customGrid: {
     alignItems: 'center',
   },
   row: {
     flexDirection: 'row',
-    gap: 16,
-    marginBottom: 16,
+    gap: 12,
+    marginBottom: 12,
     justifyContent: 'center',
   },
   tile: {
@@ -261,36 +247,28 @@ const styles = StyleSheet.create({
   },
   tileContent: {
     flex: 1,
-    borderRadius: 24,
+    borderRadius: 16,
     justifyContent: 'space-between',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.3,
-    shadowRadius: 16,
-    elevation: 8,
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
   },
-  contentTop: {
+  iconContainer: {
     alignItems: 'flex-start',
-    marginTop: -8,
-  },
-  contentBottom: {
-    marginTop: 'auto',
   },
   icon: {
-    lineHeight: 48,
+    lineHeight: 32,
+  },
+  textContainer: {
+    gap: 4,
   },
   title: {
-    fontWeight: '700',
-    color: '#FFFFFF',
-    letterSpacing: 0.5,
-    flexShrink: 1,
-    flexWrap: 'nowrap',
+    fontWeight: '600',
+    color: '#000000',
+    letterSpacing: 0.2,
   },
   subtitle: {
-    color: 'rgba(255, 255, 255, 0.8)',
-    fontWeight: '500',
-    marginTop: 4,
-    flexShrink: 1,
-    flexWrap: 'nowrap',
+    color: '#666666',
+    fontWeight: '400',
+    letterSpacing: 0,
   },
 });
