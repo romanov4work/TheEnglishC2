@@ -142,6 +142,7 @@ export default function HomeScreen() {
             maxWidth: 900,
             width: '100%',
             alignSelf: 'center',
+            paddingHorizontal: dimensions.width <= 932 ? 16 : 0, // 900 + 32 padding
           }
         ]}>
           <Text style={[styles.headerTitle, { fontSize: layout.headerFontSize }]}>
