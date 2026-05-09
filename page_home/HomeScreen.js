@@ -17,16 +17,16 @@ const getResponsiveLayout = (screenWidth) => {
 };
 
 const modules = [
-  { id: 1, title: 'VOCABULARY', subtitle: 'Слова', color: '#ffffff', icon: '📚' },
-  { id: 2, title: 'GRAMMAR', subtitle: 'Грамматика', color: '#ffffff', icon: '✍️' },
-  { id: 3, title: 'PRONUNCIATION', subtitle: 'Произношение', color: '#ffffff', icon: '🗣️' },
-  { id: 4, title: 'READING', subtitle: 'Читаем', color: '#ffffff', icon: '📖' },
-  { id: 5, title: 'WRITING', subtitle: 'Пишем', color: '#ffffff', icon: '✏️' },
-  { id: 6, title: 'LISTENING', subtitle: 'Слушаем', color: '#ffffff', icon: '🎧' },
-  { id: 7, title: 'SPEAKING', subtitle: 'Говорим', color: '#ffffff', icon: '💬' },
+  { id: 1, title: 'VOCABULARY', subtitle: 'Слова', color: '#ffffff', icon: '📚', screen: 'Vocabulary' },
+  { id: 2, title: 'GRAMMAR', subtitle: 'Грамматика', color: '#ffffff', icon: '✍️', screen: 'Grammar' },
+  { id: 3, title: 'PRONUNCIATION', subtitle: 'Произношение', color: '#ffffff', icon: '🗣️', screen: 'Pronunciation' },
+  { id: 4, title: 'READING', subtitle: 'Читаем', color: '#ffffff', icon: '📖', screen: 'Reading' },
+  { id: 5, title: 'WRITING', subtitle: 'Пишем', color: '#ffffff', icon: '✏️', screen: 'Writing' },
+  { id: 6, title: 'LISTENING', subtitle: 'Слушаем', color: '#ffffff', icon: '🎧', screen: 'Listening' },
+  { id: 7, title: 'SPEAKING', subtitle: 'Говорим', color: '#ffffff', icon: '💬', screen: 'Speaking' },
 ];
 
-const ModuleTile = ({ module, layout, tilesInRow, uniformTitleSize, uniformSubtitleSize, index }) => {
+const ModuleTile = ({ module, layout, tilesInRow, uniformTitleSize, uniformSubtitleSize, index, navigation }) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const [isPressed, setIsPressed] = useState(false);
 
@@ -52,7 +52,7 @@ const ModuleTile = ({ module, layout, tilesInRow, uniformTitleSize, uniformSubti
           width: tileSize,
           height: tileSize,
         }]}
-        onPress={() => console.log(`Pressed ${module.title}`)}
+        onPress={() => navigation.navigate(module.screen)}
         onPressIn={() => setIsPressed(true)}
         onPressOut={() => setIsPressed(false)}
       >
@@ -81,7 +81,7 @@ const ModuleTile = ({ module, layout, tilesInRow, uniformTitleSize, uniformSubti
   );
 };
 
-export default function HomeScreen() {
+export default function HomeScreen({ navigation }) {
   const [dimensions, setDimensions] = useState(Dimensions.get('window'));
 
   useEffect(() => {
@@ -146,6 +146,7 @@ export default function HomeScreen() {
               uniformTitleSize={uniformSizes.titleSize}
               uniformSubtitleSize={uniformSizes.subtitleSize}
               index={index}
+              navigation={navigation}
             />
           ))}
         </View>
@@ -159,6 +160,7 @@ export default function HomeScreen() {
               uniformTitleSize={uniformSizes.titleSize}
               uniformSubtitleSize={uniformSizes.subtitleSize}
               index={index + 3}
+              navigation={navigation}
             />
           ))}
         </View>
