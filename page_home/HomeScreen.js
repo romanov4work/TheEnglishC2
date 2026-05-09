@@ -24,7 +24,7 @@ const getResponsiveLayout = (screenWidth) => {
       headerFontSize: 56,
       headerSubtitleSize: 18,
       tilePadding: 24,
-      iconSize: 36,
+      iconSize: 28,
       titleSize: 22,
       subtitleSize: 13,
       screenWidth: screenWidth,
