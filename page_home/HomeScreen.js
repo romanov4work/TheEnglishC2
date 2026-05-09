@@ -50,6 +50,15 @@ const ModuleTile = ({ module, layout, tilesInRow }) => {
   const availableWidth = Math.min(layout.screenWidth - padding, maxRowWidth);
   const tileSize = (availableWidth - (tilesInRow - 1) * gap) / tilesInRow;
 
+  // Calculate dynamic font sizes based on tile size
+  const baseTitleSize = layout.titleSize;
+  const baseSubtitleSize = layout.subtitleSize;
+
+  // Scale down font if tile is small
+  const scaleFactor = Math.min(1, tileSize / 200);
+  const dynamicTitleSize = baseTitleSize * Math.max(scaleFactor, 0.7);
+  const dynamicSubtitleSize = baseSubtitleSize * Math.max(scaleFactor, 0.75);
+
   return (
     <Pressable
       style={[styles.tile, {
@@ -64,18 +73,16 @@ const ModuleTile = ({ module, layout, tilesInRow }) => {
       }]}>
         <Text style={[styles.icon, { fontSize: layout.iconSize }]}>{module.icon}</Text>
         <Text
-          style={[styles.title, { fontSize: layout.titleSize }]}
+          style={[styles.title, { fontSize: dynamicTitleSize }]}
           numberOfLines={1}
-          adjustsFontSizeToFit
-          minimumFontScale={0.6}
+          ellipsizeMode="clip"
         >
           {module.title}
         </Text>
         <Text
-          style={[styles.subtitle, { fontSize: layout.subtitleSize }]}
+          style={[styles.subtitle, { fontSize: dynamicSubtitleSize }]}
           numberOfLines={1}
-          adjustsFontSizeToFit
-          minimumFontScale={0.7}
+          ellipsizeMode="clip"
         >
           {module.subtitle}
         </Text>
