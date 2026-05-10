@@ -37,7 +37,7 @@ const ModuleTile = ({ module, layout, tilesInRow, uniformTitleSize, uniformSubti
       delay: index * 50,
       useNativeDriver: true,
     }).start();
-  }, []);
+  }, [fadeAnim, index]);
 
   const gap = 16;
   const padding = 32;

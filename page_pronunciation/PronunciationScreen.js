@@ -1,30 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import PlaceholderScreen from '../components/PlaceholderScreen';
 
-export default function PronunciationScreen() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Pronunciation</Text>
-      <Text style={styles.subtitle}>Произношение</Text>
-    </View>
-  );
+export default function PronunciationScreen({ navigation }) {
+  return <PlaceholderScreen navigation={navigation} title="Pronunciation" subtitle="Произношение" />;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fafafa',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: '600',
-    color: '#000000',
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 18,
-    color: '#666666',
-  },
-});

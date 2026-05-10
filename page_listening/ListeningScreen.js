@@ -1,30 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import PlaceholderScreen from '../components/PlaceholderScreen';
 
-export default function ListeningScreen() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Listening</Text>
-      <Text style={styles.subtitle}>Слушаем</Text>
-    </View>
-  );
+export default function ListeningScreen({ navigation }) {
+  return <PlaceholderScreen navigation={navigation} title="Listening" subtitle="Слушаем" />;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fafafa',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: '600',
-    color: '#000000',
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 18,
-    color: '#666666',
-  },
-});

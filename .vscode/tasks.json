@@ -1,0 +1,45 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Expo: Start Web",
+      "type": "npm",
+      "script": "web",
+      "problemMatcher": [],
+      "isBackground": true,
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "Expo: Start (QR)",
+      "type": "npm",
+      "script": "start",
+      "problemMatcher": [],
+      "isBackground": true,
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "Expo: Android",
+      "type": "npm",
+      "script": "android",
+      "problemMatcher": [],
+      "isBackground": true
+    },
+    {
+      "label": "Expo: iOS",
+      "type": "npm",
+      "script": "ios",
+      "problemMatcher": [],
+      "isBackground": true
+    }
+  ]
+}

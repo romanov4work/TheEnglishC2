@@ -12,3 +12,13 @@ npm-debug.*
 web-build/
 .DS_Store
 *.log
+
+# secrets
+settings.json
+.env
+.env.local
+.env.*.local
+
+# OS / IDE
+Thumbs.db
+.idea/
